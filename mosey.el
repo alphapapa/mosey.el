@@ -132,11 +132,14 @@ hit.  Otherwise, stop at beginning/end of line."
          (current-pos (point))
 
          ;; Make list of positions on current line, one per position-func
-         (positions (sort (delete-dups (mapcar (lambda (func) (save-excursion
-                                                                (funcall func)
-                                                                (point)))
-                                               move-funcs))
-                          '<))
+         (positions (sort
+                     (delete-dups
+                      (mapcar (lambda (func)
+                                (save-excursion
+                                  (funcall func)
+                                  (point)))
+                              move-funcs))
+                     '<))
          ;; Reverse list if :backward is set (is there a more elegant way to do this?)
          (positions (if backward
                         (nreverse positions)
@@ -165,21 +168,19 @@ PREFIX, if set, appends a prefix to the function names, like
 moseys for different modes."
   (when prefix
     (setq prefix (concat prefix "-")))
-  `(progn (defun ,(intern (concat "mosey/" prefix "forward")) ()
-            (interactive)
-            (mosey ,move-funcs)
-            )
-          (defun ,(intern (concat "mosey/" prefix "backward")) ()
-            (interactive)
-            (mosey ,move-funcs :backward)
-            )
-          (defun ,(intern (concat "mosey/" prefix "forward-cycle")) ()
-            (interactive)
-            (mosey ,move-funcs :cycle)
-            )
-          (defun ,(intern (concat "mosey/" prefix "backward-cycle")) ()
-            (interactive)
-            (mosey ,move-funcs :backward :cycle))))
+  `(progn
+     (defun ,(intern (concat "mosey/" prefix "forward")) ()
+       (interactive)
+       (mosey ,move-funcs))
+     (defun ,(intern (concat "mosey/" prefix "backward")) ()
+       (interactive)
+       (mosey ,move-funcs :backward))
+     (defun ,(intern (concat "mosey/" prefix "forward-cycle")) ()
+       (interactive)
+       (mosey ,move-funcs :cycle))
+     (defun ,(intern (concat "mosey/" prefix "backward-cycle")) ()
+       (interactive)
+       (mosey ,move-funcs :backward :cycle))))
 
 ;;;; Helper functions
 
