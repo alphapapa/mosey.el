@@ -46,6 +46,35 @@ But if you're really clever, you'll do it like this:
             ))
 #+END_SRC
 
+** Make your own moseys
+
+It's easy to make your own =moseys= with =defmosey=, somethin' like this (this example uses functions from [[https://github.com/Fuco1/smartparens][smartparens]]):
+
+#+BEGIN_SRC elisp
+  (defmosey '(beginning-of-line
+              back-to-indentation
+              sp-backward-sexp  ; Moves across lines
+              sp-forward-sexp   ; Moves across lines
+              mosey/goto-end-of-code
+              mosey/goto-beginning-of-comment-text)
+    :prefix "lisp")
+#+END_SRC
+
+That'll cook up four functions for ya:
+
++  =mosey/lisp-forward=
++  =mosey/lisp-backward=
++  =mosey/lisp-forward-cycle=
++  =mosey/lisp-backward-cycle=
+
+Then maybe you'd want to use 'em in your =emacs-lisp-mode=, somethin' like this:
+
+#+BEGIN_SRC elisp
+  (bind-keys :map emacs-lisp-mode-map
+             ("C-a" . mosey/lisp-backward)
+             ("C-e" . mosey/lisp-forward))
+  #+END_SRC
+
 * Changelog
 
 ** 0.1-pre
