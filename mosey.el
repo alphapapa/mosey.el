@@ -94,7 +94,10 @@ hit.  Otherwise, stop at beginning/end of line."
   (let (target)
     (save-excursion
       (beginning-of-line)
-      (when (re-search-forward (rx (1+ space) (syntax comment-start)) (line-end-position) t)
+      (when (re-search-forward (rx (or (and (1+ space) (syntax comment-start))
+                                       (and (* space) eol)))
+                               (line-end-position)
+                               t)
         (setq target (match-beginning 0))))
     (when target
       (goto-char target))))
