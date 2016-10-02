@@ -62,19 +62,19 @@ hit.  Otherwise, stop at beginning/end of line."
 
 (cl-defmacro defmosey (position-funcs)
   "Define `mosey-' functions."
-  `(progn (defun mosey-forward ()
+  `(progn (defun mosey/forward ()
             (interactive)
             (mosey ,position-funcs)
             )
-          (defun mosey-backward ()
+          (defun mosey/backward ()
             (interactive)
             (mosey ,position-funcs :backward)
             )
-          (defun mosey-forward-cycle ()
+          (defun mosey/forward-cycle ()
             (interactive)
             (mosey ,position-funcs :cycle)
             )
-          (defun mosey-backward-cycle ()
+          (defun mosey/backward-cycle ()
             (interactive)
             (mosey ,position-funcs :backward :cycle))))
 
