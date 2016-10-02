@@ -46,6 +46,7 @@
 (defmosey
   beginning-of-line
   back-to-indentation
+  mosey/goto-end-of-code
   mosey/goto-beginning-of-comment-text
   end-of-line)
 
@@ -55,5 +56,13 @@
       (end-of-line)
       (when (re-search-backward (rx (syntax comment-start) (* space)) (line-beginning-position) t)
         (setq target (match-end 0))))
+    (when target
+      (goto-char target))))
+(defun mosey/goto-end-of-code ()
+  (let (target)
+    (save-excursion
+      (beginning-of-line)
+      (when (re-search-forward (rx (1+ space) (syntax comment-start)) (line-end-position) t)
+        (setq target (match-beginning 0))))
     (when target
       (goto-char target))))
