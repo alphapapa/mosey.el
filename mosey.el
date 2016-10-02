@@ -53,7 +53,7 @@
   (let (target)
     (save-excursion
       (end-of-line)
-      (when (re-search-backward (rx (syntax comment-start) (1+ space)) (line-beginning-position) t)
+      (when (re-search-backward (rx (syntax comment-start) (* space)) (line-beginning-position) t)
         (setq target (match-end 0))))
     (when target
       (goto-char target))))
