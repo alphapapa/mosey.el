@@ -56,7 +56,7 @@
 
 ;;;; Require
 
-(require 'cl)
+(require 'cl-lib)
 
 ;;;; Mosey function and macro
 
