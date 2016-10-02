@@ -28,6 +28,12 @@
 ;;;; Mosey function and macro
 
 (cl-defun mosey (position-funcs &key (backward nil backward-set) (cycle nil cycle-set))
+  "Move the point according to the list of POSITION-FUNCS.
+
+If BACKWARD is set, move backwards.
+
+If CYCLE is set, cycle around when the beginning/end of line is
+hit.  Otherwise, stop at beginning/end of line."
   ;; position-funcs should MOVE THE POINT, not just return the position
   (interactive)
   (let* ((backward backward-set)
@@ -54,6 +60,7 @@
     (goto-char target)))
 
 (cl-defmacro defmosey (&rest position-funcs)
+  "Define `mosey-' functions."
   `(progn (defun mosey-forward ()
             (interactive)
             (mosey ',position-funcs)
@@ -73,6 +80,7 @@
 ;;;; Helper functions
 
 (defun mosey/goto-beginning-of-comment-text ()
+  "Move point to beginning of comment text on current line."
   (let (target)
     (save-excursion
       (end-of-line)
@@ -82,6 +90,7 @@
       (goto-char target))))
 
 (defun mosey/goto-end-of-code ()
+  "Move point to end of code on current line."
   (let (target)
     (save-excursion
       (beginning-of-line)
