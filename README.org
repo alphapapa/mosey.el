@@ -1,6 +1,8 @@
 #+PROPERTY: LOGGING nil
 
-@@html:<img src="dont-tread-on-emacs-150.png" align="right">@@
+#+BEGIN_HTML
+<a href=https://alphapapa.github.io/dont-tread-on-emacs/><img src="dont-tread-on-emacs-150.png" align="right"></a>
+#+END_HTML
 
 * mosey.el
 
