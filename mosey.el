@@ -103,11 +103,41 @@ hit.  Otherwise, stop at beginning/end of line."
     (when target
       (goto-char target))))
 
+(defun mosey/goto-org-table-next-field ()
+  "Move point to next Org table field."
+  (when (equal major-mode 'org-mode)
+    (let (target)
+      (save-excursion
+        (when (org-at-table-p)
+          (when (looking-at-p (rx (* space) "|" (* space)))
+            ;; Skip current column
+            (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t))
+          (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t)
+          (setq target (match-end 0))))
+      (when target
+        (goto-char target)))))
+
+(defun mosey/goto-org-table-prev-field ()
+  "Move point to previous Org table field."
+  (when (equal major-mode 'org-mode)
+    (let (target)
+      (save-excursion
+        (when (org-at-table-p)
+          (when (looking-back (rx (* space) "|" (* space)))
+            ;; Skip current column
+            (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t))
+          (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t)
+          (setq target (match-end 0))))
+      (when target
+        (goto-char target)))))
+
 ;;;; Default mosey
 
 (defmosey
   beginning-of-line
   back-to-indentation
+  mosey/goto-org-table-prev-field
+  mosey/goto-org-table-next-field
   mosey/goto-end-of-code
   mosey/goto-beginning-of-comment-text
   end-of-line)
