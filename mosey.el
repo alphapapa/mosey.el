@@ -8,7 +8,7 @@
 
 ;;; Commentary:
 
-;; Howdy.  Why don't ya mosey on in here.  Have a sit-down.
+;; Howdy.  Why don't ya mosey on in here.  Have yourself a sit-down.
 
 ;; `mosey' makes it easy to mosey back and forth in your buffers.
 ;; Just pass `mosey' a list of functions that move the point to
