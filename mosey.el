@@ -1,9 +1,10 @@
 (require 'cl)
 
-(cl-defun mosey (position-funcs &key (backward nil backward-set))
+(cl-defun mosey (position-funcs &key (backward nil backward-set) (cycle nil cycle-set))
   ;; position-funcs should MOVE THE POINT, not just return the position
   (interactive)
   (let* ((backward backward-set)
+         (cycle cycle-set)
          (current-pos (point))
 
          ;; Make list of positions on current line, one per position-func
@@ -19,11 +20,13 @@
          (target (cl-loop for p in positions
                           if (funcall (if backward '< '>) p current-pos)
                           return p
-                          finally return (first positions))))
+                          finally return (if cycle
+                                             (first positions)
+                                           current-pos))))
     ;; Goto the target position
     (goto-char target)))
 
-(defmacro defmosey (&rest position-funcs)
+(cl-defmacro defmosey (&rest position-funcs)
   `(progn (defun mosey-forward ()
             (interactive)
             (mosey ',position-funcs)
@@ -31,7 +34,14 @@
           (defun mosey-backward ()
             (interactive)
             (mosey ',position-funcs :backward)
-            )))
+            )
+          (defun mosey-forward-cycle ()
+            (interactive)
+            (mosey ',position-funcs :cycle)
+            )
+          (defun mosey-backward-cycle ()
+            (interactive)
+            (mosey ',position-funcs :backward :cycle))))
 
 (defmosey
   beginning-of-line
