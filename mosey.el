@@ -92,7 +92,7 @@ hit.  Otherwise, stop at beginning/end of line."
                           if (funcall (if backward '< '>) p current-pos)
                           return p
                           finally return (if cycle
-                                             (first positions)
+                                             (car positions)
                                            current-pos))))
     ;; Goto the target position
     (goto-char target)))
