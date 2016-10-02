@@ -145,7 +145,7 @@ moseys for different modes."
     (when target
       (goto-char target))))
 
-(defun mosey/goto-org-table-next-field ()
+(defun mosey/org-goto-table-next-field ()
   "Move point to next Org table field."
   (when (equal major-mode 'org-mode)
     (let (target)
@@ -159,7 +159,7 @@ moseys for different modes."
       (when target
         (goto-char target)))))
 
-(defun mosey/goto-org-table-prev-field ()
+(defun mosey/org-goto-table-prev-field ()
   "Move point to previous Org table field."
   (when (equal major-mode 'org-mode)
     (let (target)
@@ -177,8 +177,8 @@ moseys for different modes."
 
 (defmosey '(beginning-of-line
             back-to-indentation
-            mosey/goto-org-table-prev-field
-            mosey/goto-org-table-next-field
+            mosey/org-goto-table-prev-field
+            mosey/org-goto-table-next-field
             mosey/goto-end-of-code
             mosey/goto-beginning-of-comment-text
             end-of-line))
