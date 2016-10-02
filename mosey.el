@@ -152,45 +152,74 @@ moseys for different modes."
     (when target
       (goto-char target))))
 
-(defun mosey/org-goto-table-next-field ()
-  "Move point to next Org table field."
-  (when (equal major-mode 'org-mode)
-    (let (target)
-      (save-excursion
-        (when (org-at-table-p)
-          (when (looking-at-p (rx (* space) "|" (* space)))
-            ;; Skip current column
-            (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t))
-          (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t)
-          (setq target (match-end 0))))
-      (when target
-        (goto-char target)))))
-
-(defun mosey/org-goto-table-prev-field ()
-  "Move point to previous Org table field."
-  (when (equal major-mode 'org-mode)
-    (let (target)
-      (save-excursion
-        (when (org-at-table-p)
-          (when (looking-back (rx (* space) "|" (* space)))
-            ;; Skip current column
-            (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t))
-          (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t)
-          (setq target (match-end 0))))
-      (when target
-        (goto-char target)))))
-
 ;;;; Default mosey
 
 ;;;###autoload
 (defmosey '(beginning-of-line
             back-to-indentation
-            mosey/org-goto-table-prev-field
-            mosey/org-goto-table-next-field
             mosey/goto-end-of-code
             mosey/goto-beginning-of-comment-text
             end-of-line))
 
-(provide 'mosey)
+;;;; Org support
+
+(with-eval-after-load 'org
+
+  (defun mosey/org-goto-table-next-field ()
+    "Move point to next Org table field."
+    (when (equal major-mode 'org-mode)
+      (let (target)
+        (save-excursion
+          (when (org-at-table-p)
+            (when (looking-at-p (rx (* space) "|" (* space)))
+              ;; Skip current column
+              (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t))
+            (re-search-forward (rx (* space) "|" (* space)) (line-end-position) t)
+            (setq target (match-end 0))))
+        (when target
+          (goto-char target)))))
+
+  (defun mosey/org-goto-table-prev-field ()
+    "Move point to previous Org table field."
+    (when (equal major-mode 'org-mode)
+      (let (target)
+        (save-excursion
+          (when (org-at-table-p)
+            (when (looking-back (rx (* space) "|" (* space)))
+              ;; Skip current column
+              (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t))
+            (re-search-backward (rx (* space) "|" (* space)) (line-beginning-position) t)
+            (setq target (match-end 0))))
+        (when target
+          (goto-char target)))))
+
+  ;; Add Org functions to default if it hasn't changed, using
+  ;; `mosey/forward' and `mosey/forward-cycle' as standards
+  (when (and (equal (function (lambda ()
+                                (interactive)
+                                (mosey '(beginning-of-line
+                                         back-to-indentation
+                                         mosey/goto-end-of-code
+                                         mosey/goto-beginning-of-comment-text
+                                         end-of-line))))
+                    (indirect-function 'mosey/forward))
+             (equal (function (lambda ()
+                                (interactive)
+                                (mosey '(beginning-of-line
+                                         back-to-indentation
+                                         mosey/goto-end-of-code
+                                         mosey/goto-beginning-of-comment-text
+                                         end-of-line)
+                                       :cycle)))
+                    (indirect-function 'mosey/forward-cycle)))
+    (defmosey '(beginning-of-line
+                back-to-indentation
+                mosey/org-goto-table-prev-field
+                mosey/org-goto-table-next-field
+                mosey/goto-end-of-code
+                mosey/goto-beginning-of-comment-text
+                end-of-line))))
+
+  (provide 'mosey)
 
 ;;; mosey.el ends here
