@@ -165,6 +165,9 @@ moseys for different modes."
 
 (with-eval-after-load 'org
 
+  ;; Declare functions to avoid byte-compile warnings
+  (declare-function org-at-table-p "org")
+
   (defun mosey/org-goto-table-next-field ()
     "Move point to next Org table field."
     (when (equal major-mode 'org-mode)
