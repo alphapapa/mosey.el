@@ -60,23 +60,23 @@ hit.  Otherwise, stop at beginning/end of line."
     ;; Goto the target position
     (goto-char target)))
 
-(cl-defmacro defmosey (&rest position-funcs)
+(cl-defmacro defmosey (position-funcs)
   "Define `mosey-' functions."
   `(progn (defun mosey-forward ()
             (interactive)
-            (mosey ',position-funcs)
+            (mosey ,position-funcs)
             )
           (defun mosey-backward ()
             (interactive)
-            (mosey ',position-funcs :backward)
+            (mosey ,position-funcs :backward)
             )
           (defun mosey-forward-cycle ()
             (interactive)
-            (mosey ',position-funcs :cycle)
+            (mosey ,position-funcs :cycle)
             )
           (defun mosey-backward-cycle ()
             (interactive)
-            (mosey ',position-funcs :backward :cycle))))
+            (mosey ,position-funcs :backward :cycle))))
 
 ;;;; Helper functions
 
@@ -133,14 +133,13 @@ hit.  Otherwise, stop at beginning/end of line."
 
 ;;;; Default mosey
 
-(defmosey
-  beginning-of-line
-  back-to-indentation
-  mosey/goto-org-table-prev-field
-  mosey/goto-org-table-next-field
-  mosey/goto-end-of-code
-  mosey/goto-beginning-of-comment-text
-  end-of-line)
+(defmosey '(beginning-of-line
+            back-to-indentation
+            mosey/goto-org-table-prev-field
+            mosey/goto-org-table-next-field
+            mosey/goto-end-of-code
+            mosey/goto-beginning-of-comment-text
+            end-of-line))
 
 (provide 'mosey)
 
