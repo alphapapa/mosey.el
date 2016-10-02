@@ -88,21 +88,30 @@ hit.  Otherwise, stop at beginning/end of line."
     ;; Goto the target position
     (goto-char target)))
 
-(cl-defmacro defmosey (position-funcs)
-  "Define `mosey-' functions."
-  `(progn (defun mosey/forward ()
+(cl-defmacro defmosey (position-funcs &key prefix)
+  "Define `mosey/forward' and `mosey/backward' functions, with
+`-cycle' variants.
+
+POSITION-FUNCS is a list of functions that move the point.
+
+PREFIX, if set, appends a prefix to the function names, like
+`mosey/prefix-forward', useful for defining different sets of
+moseys for different modes."
+  (when prefix
+    (setq prefix (concat prefix "-")))
+  `(progn (defun ,(intern (concat "mosey/" prefix "forward")) ()
             (interactive)
             (mosey ,position-funcs)
             )
-          (defun mosey/backward ()
+          (defun ,(intern (concat "mosey/" prefix "backward")) ()
             (interactive)
             (mosey ,position-funcs :backward)
             )
-          (defun mosey/forward-cycle ()
+          (defun ,(intern (concat "mosey/" prefix "forward-cycle")) ()
             (interactive)
             (mosey ,position-funcs :cycle)
             )
-          (defun mosey/backward-cycle ()
+          (defun ,(intern (concat "mosey/" prefix "backward-cycle")) ()
             (interactive)
             (mosey ,position-funcs :backward :cycle))))
 
