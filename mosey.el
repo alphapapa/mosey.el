@@ -1,4 +1,31 @@
+;;; mosey.el --- Mosey around your buffers
+
+
+;;; Commentary:
+
+
+;;; License:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Code:
+
+;;;; Require
+
 (require 'cl)
+
+;;;; Mosey function and macro
 
 (cl-defun mosey (position-funcs &key (backward nil backward-set) (cycle nil cycle-set))
   ;; position-funcs should MOVE THE POINT, not just return the position
@@ -43,12 +70,7 @@
             (interactive)
             (mosey ',position-funcs :backward :cycle))))
 
-(defmosey
-  beginning-of-line
-  back-to-indentation
-  mosey/goto-end-of-code
-  mosey/goto-beginning-of-comment-text
-  end-of-line)
+;;;; Helper functions
 
 (defun mosey/goto-beginning-of-comment-text ()
   (let (target)
@@ -58,6 +80,7 @@
         (setq target (match-end 0))))
     (when target
       (goto-char target))))
+
 (defun mosey/goto-end-of-code ()
   (let (target)
     (save-excursion
@@ -66,3 +89,16 @@
         (setq target (match-beginning 0))))
     (when target
       (goto-char target))))
+
+;;;; Default mosey
+
+(defmosey
+  beginning-of-line
+  back-to-indentation
+  mosey/goto-end-of-code
+  mosey/goto-beginning-of-comment-text
+  end-of-line)
+
+(provide 'mosey)
+
+;;; mosey.el ends here
