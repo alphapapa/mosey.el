@@ -24,18 +24,72 @@
 
 ;;; Installation
 
-;; There's even a default set of those commands, so all ya need to do is:
+;; Best thing to do is just mosey on over to http://melpa.org/ and
+;; install the package called `mosey'.
+
+;; But if you like gettin' your hands dirty, all you need to do is put
+;; mosey.el in your `load-path' and then put this in your init file:
 
 ;; (require 'mosey)
 
-;; ...and then you can start moseying around.  You might even want to
-;; rebind your keys to them, maybe like this:
+;; ...and then you can start moseying around.
+
+;;; Usage
+
+;; You can use these commands right off the bat to move within the
+;; current line:
+
+;; + mosey/forward
+;; + mosey/backward
+;; + mosey/forward-cycle
+;; + mosey/backward-cycle
+
+;; You might even want to rebind your keys to 'em, maybe like this:
 
 ;; (global-set-key (kbd "C-a") 'mosey/backward)
 ;; (global-set-key (kbd "C-e") 'mosey/forward)
 
 ;; ...but that'd be even easier with `use-package' and its handy-dandy
-;; `:bind*' form.
+;; `:bind*' form:
+
+;; (use-package mosey
+;;   :bind* (
+;;           ("C-a" . mosey/backward)
+;;           ("C-e" . mosey/forward)
+;;           ))
+
+;;;; Make your own moseys
+
+;; It's easy to make your own moseys with defmosey, somethin' like
+;; this (this example uses functions from smartparens):
+
+;; (defmosey '(beginning-of-line
+;;             back-to-indentation
+;;             sp-backward-sexp  ; Moves across lines
+;;             sp-forward-sexp   ; Moves across lines
+;;             mosey/goto-end-of-code
+;;             mosey/goto-beginning-of-comment-text)
+;;   :prefix "lisp")
+
+;; That'll cook up four functions for ya:
+
+;; + mosey/lisp-forward
+;; + mosey/lisp-backward
+;; + mosey/lisp-forward-cycle
+;; + mosey/lisp-backward-cycle
+
+;; Then maybe you'd want to use 'em in your `emacs-lisp-mode',
+;; somethin' like this:
+
+;; (bind-keys :map emacs-lisp-mode-map
+;;            ("C-a" . mosey/lisp-backward)
+;;            ("C-e" . mosey/lisp-forward))
+
+;;; Credits
+
+;;  This package was inspired by Alex Kost's fantastic `mwim' package.
+;;  It has even more features, so check it out!
+;;  https://github.com/alezost/mwim.el
 
 ;;; License:
 

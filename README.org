@@ -16,7 +16,9 @@ To make it easier for ya, just pass a list of point-moving functions to =defmose
 
 * Installation
 
-Well now, all you need to do is put =mosey.el= in your =load-path= and then put this in your init file:
+Best thing to do is just mosey on over to [[https://melpa.org/][MELPA]] and install the package called =mosey=.
+
+But if you like gettin' your hands dirty, all you need to do is put =mosey.el= in your =load-path= and then put this in your init file:
 
 #+BEGIN_SRC elisp
   (require 'mosey)
@@ -33,14 +35,14 @@ You can use these commands right off the bat to move within the current line:
 +  =mosey/forward-cycle=
 +  =mosey/backward-cycle=
 
-You might want to bind them like this:
+You might even want to rebind your keys to 'em, maybe like this:
 
 #+BEGIN_SRC elisp
   (global-set-key (kbd "C-a") 'mosey/backward)
   (global-set-key (kbd "C-e") 'mosey/forward)
 #+END_SRC
 
-But if you're really clever, you'll do it like this:
+...but that'd be even easier with `use-package' and its handy-dandy =:bind*= form:
 
 #+BEGIN_SRC elisp
   (use-package mosey
