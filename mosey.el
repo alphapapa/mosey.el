@@ -60,6 +60,7 @@
 
 ;;;; Mosey function and macro
 
+;;;###autoload
 (cl-defun mosey (move-funcs &key (backward nil backward-set) (cycle nil cycle-set))
   "Move the point according to the list of MOVE-FUNCS.
 
@@ -96,6 +97,7 @@ hit.  Otherwise, stop at beginning/end of line."
     ;; Goto the target position
     (goto-char target)))
 
+;;;###autoload
 (cl-defmacro defmosey (move-funcs &key prefix)
   "Define `mosey/forward' and `mosey/backward' functions, with
 `-cycle' variants.
@@ -180,6 +182,7 @@ moseys for different modes."
 
 ;;;; Default mosey
 
+;;;###autoload
 (defmosey '(beginning-of-line
             back-to-indentation
             mosey/org-goto-table-prev-field
