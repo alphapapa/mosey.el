@@ -3,6 +3,34 @@
 
 ;;; Commentary:
 
+;; Howdy.  Why don't ya mosey on in here.  Have a sit-down.
+
+;; `mosey' makes it easy to mosey back and forth in your buffers.
+;; Just pass `mosey' a list of functions that move the point to
+;; certain places, and it'll mosey the point between those places.
+;; Tell it `:backward' if you want to mosey on back, otherwise it'll
+;; mosey on ahead.  Tell it to `:cycle' if you want it to loop around
+;; when it gets to one end or the other.
+
+;; To make it easier for ya, just pass a list of point-moving
+;; functions to `defmosey', and it'll cook up four functions:
+;; `mosey/forward', `mosey/backward', `mosey/forward-cycle', and
+;; `mosey/backward-cycle'.
+
+;;; Installation
+
+;; There's even a default set of those commands, so all ya need to do is:
+
+;; (require 'mosey)
+
+;; ...and then you can start moseying around.  You might even want to
+;; rebind your keys to them, maybe like this:
+
+;; (global-set-key (kbd "C-a") 'mosey/backward)
+;; (global-set-key (kbd "C-e") 'mosey/forward)
+
+;; ...but that'd be even easier with `use-package' and its handy-dandy
+;; `:bind*' form.
 
 ;;; License:
 
