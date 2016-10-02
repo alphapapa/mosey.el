@@ -1,14 +1,18 @@
 #+PROPERTY: LOGGING nil
 
+@@html:<img src="dont-tread-on-emacs-150.png" align="right">@@
+
 * mosey.el
 
-[[https://alphapapa.github.io/dont-tread-on-emacs/][dont-tread-on-emacs-150.png]]
-
 Howdy.  Why don't ya mosey on in here.  Have yourself a sit-down.
+
+@@html:<img src="mosey.jpg" align="left">@@
 
 =mosey= makes it easy to mosey back and forth in your buffers.  Just pass =mosey= a list of functions that move the point to certain places, and it'll mosey the point between those places.  Tell it =:backward= if you want to mosey on back, otherwise it'll mosey on ahead.  Tell it to =:cycle= if you want it to loop around when it gets to one end or the other.
 
 To make it easier for ya, just pass a list of point-moving functions to =defmosey=, and it'll cook up four functions: =mosey/forward=, =mosey/backward=, =mosey/forward-cycle=, and =mosey/backward-cycle=.
+
+@@html:<br clear="left">@@
 
 * Installation
 
