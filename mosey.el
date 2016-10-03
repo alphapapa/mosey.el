@@ -19,8 +19,8 @@
 
 ;; To make it easier for ya, just pass a list of point-moving
 ;; functions to `defmosey', and it'll cook up four functions:
-;; `mosey/forward', `mosey/backward', `mosey/forward-cycle', and
-;; `mosey/backward-cycle'.
+;; `mosey-forward', `mosey-backward', `mosey-forward-cycle', and
+;; `mosey-backward-cycle'.
 
 ;;; Installation
 
@@ -39,23 +39,23 @@
 ;; You can use these commands right off the bat to move within the
 ;; current line:
 
-;; + mosey/forward
-;; + mosey/backward
-;; + mosey/forward-cycle
-;; + mosey/backward-cycle
+;; + mosey-forward
+;; + mosey-backward
+;; + mosey-forward-cycle
+;; + mosey-backward-cycle
 
 ;; You might even want to rebind your keys to 'em, maybe like this:
 
-;; (global-set-key (kbd "C-a") 'mosey/backward)
-;; (global-set-key (kbd "C-e") 'mosey/forward)
+;; (global-set-key (kbd "C-a") 'mosey-backward)
+;; (global-set-key (kbd "C-e") 'mosey-forward)
 
 ;; ...but that'd be even easier with `use-package' and its handy-dandy
 ;; `:bind*' form:
 
 ;; (use-package mosey
 ;;   :bind* (
-;;           ("C-a" . mosey/backward)
-;;           ("C-e" . mosey/forward)
+;;           ("C-a" . mosey-backward)
+;;           ("C-e" . mosey-forward)
 ;;           ))
 
 ;;;; Make your own moseys
@@ -67,23 +67,23 @@
 ;;             back-to-indentation
 ;;             sp-backward-sexp  ; Moves across lines
 ;;             sp-forward-sexp   ; Moves across lines
-;;             mosey/goto-end-of-code
-;;             mosey/goto-beginning-of-comment-text)
+;;             mosey-goto-end-of-code
+;;             mosey-goto-beginning-of-comment-text)
 ;;   :prefix "lisp")
 
 ;; That'll cook up four functions for ya:
 
-;; + mosey/lisp-forward
-;; + mosey/lisp-backward
-;; + mosey/lisp-forward-cycle
-;; + mosey/lisp-backward-cycle
+;; + mosey-lisp-forward
+;; + mosey-lisp-backward
+;; + mosey-lisp-forward-cycle
+;; + mosey-lisp-backward-cycle
 
 ;; Then maybe you'd want to use 'em in your `emacs-lisp-mode',
 ;; somethin' like this:
 
 ;; (bind-keys :map emacs-lisp-mode-map
-;;            ("C-a" . mosey/lisp-backward)
-;;            ("C-e" . mosey/lisp-forward))
+;;            ("C-a" . mosey-lisp-backward)
+;;            ("C-e" . mosey-lisp-forward))
 
 ;;; Credits
 
@@ -156,7 +156,7 @@ hit.  Otherwise, stop at beginning/end of line."
 
 ;;;###autoload
 (cl-defmacro defmosey (move-funcs &key prefix)
-  "Define `mosey/forward' and `mosey/backward' functions, with
+  "Define `mosey-forward' and `mosey-backward' functions, with
 `-cycle' variants.
 
 MOVE-FUNCS is a list of functions that should should move the
@@ -164,27 +164,27 @@ point to a significant position, usually on the current line, but
 potentially across lines.
 
 PREFIX, if set, appends a prefix to the function names, like
-`mosey/prefix-forward', useful for defining different sets of
+`mosey-prefix-forward', useful for defining different sets of
 moseys for different modes."
   (when prefix
     (setq prefix (concat prefix "-")))
   `(progn
-     (defun ,(intern (concat "mosey/" prefix "forward")) ()
+     (defun ,(intern (concat "mosey-" prefix "forward")) ()
        (interactive)
        (mosey ,move-funcs))
-     (defun ,(intern (concat "mosey/" prefix "backward")) ()
+     (defun ,(intern (concat "mosey-" prefix "backward")) ()
        (interactive)
        (mosey ,move-funcs :backward))
-     (defun ,(intern (concat "mosey/" prefix "forward-cycle")) ()
+     (defun ,(intern (concat "mosey-" prefix "forward-cycle")) ()
        (interactive)
        (mosey ,move-funcs :cycle))
-     (defun ,(intern (concat "mosey/" prefix "backward-cycle")) ()
+     (defun ,(intern (concat "mosey-" prefix "backward-cycle")) ()
        (interactive)
        (mosey ,move-funcs :backward :cycle))))
 
 ;;;; Helper functions
 
-(defun mosey/goto-beginning-of-comment-text ()
+(defun mosey-goto-beginning-of-comment-text ()
   "Move point to beginning of comment text on current line."
   (let (target)
     (save-excursion
@@ -194,7 +194,7 @@ moseys for different modes."
     (when target
       (goto-char target))))
 
-(defun mosey/goto-end-of-code ()
+(defun mosey-goto-end-of-code ()
   "Move point to end of code on current line."
   (let (target)
     (save-excursion
@@ -212,8 +212,8 @@ moseys for different modes."
 ;;;###autoload
 (defmosey '(beginning-of-line
             back-to-indentation
-            mosey/goto-end-of-code
-            mosey/goto-beginning-of-comment-text
+            mosey-goto-end-of-code
+            mosey-goto-beginning-of-comment-text
             end-of-line))
 
 ;;;; Org support
@@ -223,7 +223,7 @@ moseys for different modes."
   ;; Declare functions to avoid byte-compile warnings
   (declare-function org-at-table-p "org")
 
-  (defun mosey/org-goto-table-next-field ()
+  (defun mosey-org-goto-table-next-field ()
     "Move point to next Org table field."
     (when (equal major-mode 'org-mode)
       (let (target)
@@ -237,7 +237,7 @@ moseys for different modes."
         (when target
           (goto-char target)))))
 
-  (defun mosey/org-goto-table-prev-field ()
+  (defun mosey-org-goto-table-prev-field ()
     "Move point to previous Org table field."
     (when (equal major-mode 'org-mode)
       (let (target)
@@ -252,30 +252,30 @@ moseys for different modes."
           (goto-char target)))))
 
   ;; Add Org functions to default if it hasn't changed, using
-  ;; `mosey/forward' and `mosey/forward-cycle' as standards
+  ;; `mosey-forward' and `mosey-forward-cycle' as standards
   (when (and (equal (function (lambda ()
                                 (interactive)
                                 (mosey '(beginning-of-line
                                          back-to-indentation
-                                         mosey/goto-end-of-code
-                                         mosey/goto-beginning-of-comment-text
+                                         mosey-goto-end-of-code
+                                         mosey-goto-beginning-of-comment-text
                                          end-of-line))))
-                    (indirect-function 'mosey/forward))
+                    (indirect-function 'mosey-forward))
              (equal (function (lambda ()
                                 (interactive)
                                 (mosey '(beginning-of-line
                                          back-to-indentation
-                                         mosey/goto-end-of-code
-                                         mosey/goto-beginning-of-comment-text
+                                         mosey-goto-end-of-code
+                                         mosey-goto-beginning-of-comment-text
                                          end-of-line)
                                        :cycle)))
-                    (indirect-function 'mosey/forward-cycle)))
+                    (indirect-function 'mosey-forward-cycle)))
     (defmosey '(beginning-of-line
                 back-to-indentation
-                mosey/org-goto-table-prev-field
-                mosey/org-goto-table-next-field
-                mosey/goto-end-of-code
-                mosey/goto-beginning-of-comment-text
+                mosey-org-goto-table-prev-field
+                mosey-org-goto-table-next-field
+                mosey-goto-end-of-code
+                mosey-goto-beginning-of-comment-text
                 end-of-line))))
 
   (provide 'mosey)
