@@ -127,7 +127,7 @@ If BACKWARD is set, move backwards.
 If CYCLE is set, cycle around when the beginning/end of line is
 hit.  Otherwise, stop at beginning/end of line."
   (interactive)
-  (let* ((backward backward-set)
+  (let* ((compare-func (if backward-set '< '>))
          (cycle cycle-set)
          (current-pos (point))
 
@@ -146,7 +146,7 @@ hit.  Otherwise, stop at beginning/end of line."
                       positions))
          ;; Determine next target position
          (target (cl-loop for p in positions
-                          if (funcall (if backward '< '>) p current-pos)
+                          if (funcall compare-func p current-pos)
                           return p
                           finally return (if cycle
                                              (car positions)
