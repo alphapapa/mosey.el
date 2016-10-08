@@ -6,6 +6,8 @@
 
 * mosey.el
 
+[[https://melpa.org/#/mosey][file:https://melpa.org/packages/mosey-badge.svg]]
+
 Howdy.  Why don't ya mosey on in here.  Have yourself a sit-down.
 
 @@html:<img src="mosey.jpg" align="left">@@
