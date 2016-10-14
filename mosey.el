@@ -2,7 +2,7 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; Url: http://github.com/alphapapa/mosey.el
-;; Version: 0.1-pre
+;; Version: 0.1
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 

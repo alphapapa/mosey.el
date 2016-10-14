@@ -87,9 +87,9 @@ Then maybe you'd want to use 'em in your =emacs-lisp-mode=, somethin' like this:
 
 * Changelog
 
-** 0.1-pre
+** 0.1
 
-+ We're just gettin' started here!
++ We're just gettin' started here!  We're moseyin' forward, backward, and cyclin' all the way 'round!
 
 * Credits
 
