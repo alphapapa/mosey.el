@@ -2,7 +2,7 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; Url: http://github.com/alphapapa/mosey.el
-;; Version: 0.1
+;; Version: 0.2-pre
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: convenience
 
@@ -13,14 +13,17 @@
 ;; `mosey' makes it easy to mosey back and forth in your buffers.
 ;; Just pass `mosey' a list of functions that move the point to
 ;; certain places, and it'll mosey the point between those places.
-;; Tell it `:backward' if you want to mosey on back, otherwise it'll
-;; mosey on ahead.  Tell it to `:cycle' if you want it to loop around
-;; when it gets to one end or the other.
+;; Tell it `:backward t' if you want to mosey on back, otherwise it'll
+;; mosey on ahead.  Tell it to `:bounce t' if you want it to bounce
+;; back a notch when it hits the end, and tell it to `:cycle t' if you
+;; want it to loop around when it gets to one end or the other.
 
 ;; To make it easier for ya, just pass a list of point-moving
-;; functions to `defmosey', and it'll cook up four functions:
-;; `mosey-forward', `mosey-backward', `mosey-forward-cycle', and
-;; `mosey-backward-cycle'.
+;; functions to `defmosey', and it'll cook up six functions:
+;; `mosey-forward', `mosey-backward', `mosey-forward-bounce',
+;; `mosey-backward-bounce', `mosey-forward-cycle', and
+;; `mosey-backward-cycle'.  Then you can pick your fav-o-rite ones and
+;; forget about the rest!
 
 ;;; Installation
 
@@ -41,6 +44,8 @@
 
 ;; + mosey-forward
 ;; + mosey-backward
+;; + mosey-forward-bounce
+;; + mosey-backward-bounce
 ;; + mosey-forward-cycle
 ;; + mosey-backward-cycle
 
@@ -54,8 +59,9 @@
 
 ;; (use-package mosey
 ;;   :bind* (
-;;           ("C-a" . mosey-backward)
-;;           ("C-e" . mosey-forward)
+;;           ;; My personal favorites
+;;           ("C-a" . mosey-backward-bounce)
+;;           ("C-e" . mosey-forward-bounce)
 ;;           ))
 
 ;;;; Make your own moseys
@@ -71,10 +77,12 @@
 ;;             mosey-goto-beginning-of-comment-text)
 ;;   :prefix "lisp")
 
-;; That'll cook up four functions for ya:
+;; That'll cook up six functions for ya:
 
 ;; + mosey-lisp-forward
 ;; + mosey-lisp-backward
+;; + mosey-lisp-forward-bounce
+;; + mosey-lisp-backward-bounce
 ;; + mosey-lisp-forward-cycle
 ;; + mosey-lisp-backward-cycle
 
@@ -82,8 +90,8 @@
 ;; somethin' like this:
 
 ;; (bind-keys :map emacs-lisp-mode-map
-;;            ("C-a" . mosey-lisp-backward)
-;;            ("C-e" . mosey-lisp-forward))
+;;            ("C-a" . mosey-lisp-backward-cycle)
+;;            ("C-e" . mosey-lisp-forward-cycle))
 
 ;;; Credits
 
@@ -115,7 +123,7 @@
 ;;;; Mosey function and macro
 
 ;;;###autoload
-(cl-defun mosey (move-funcs &key (backward nil backward-set) (cycle nil cycle-set))
+(cl-defun mosey (move-funcs &key (backward nil backward-set) (cycle nil cycle-set) (bounce nil bounce-set))
   "Move the point according to the list of MOVE-FUNCS.
 
 Each function in MOVE-FUNCS should move the point to a
@@ -125,10 +133,14 @@ potentially across lines.
 If BACKWARD is set, move backwards.
 
 If CYCLE is set, cycle around when the beginning/end of line is
-hit.  Otherwise, stop at beginning/end of line."
+hit.  Otherwise, stop at beginning/end of line.
+
+If BOUNCE is set, bounce back to the next-to-last position when
+the last one is hit."
   (interactive)
   (let* ((compare-func (if backward-set '< '>))
          (cycle cycle-set)
+         (bounce bounce-set)
          (current-pos (point))
 
          ;; Make list of positions on current line, one per position-func
@@ -148,16 +160,15 @@ hit.  Otherwise, stop at beginning/end of line."
          (target (cl-loop for p in positions
                           if (funcall compare-func p current-pos)
                           return p
-                          finally return (if cycle
-                                             (car positions)
-                                           current-pos))))
+                          finally return (cond (cycle (car positions))
+                                               (bounce (car (last positions 2)))
+                                               (t current-pos)))))
     ;; Goto the target position
     (goto-char target)))
 
 ;;;###autoload
 (cl-defmacro defmosey (move-funcs &key prefix)
-  "Define `mosey-forward' and `mosey-backward' functions, with
-`-cycle' variants.
+  "Define `mosey-forward' and `mosey-backward' functions, with `-bounce' and `-cycle' variants.
 
 MOVE-FUNCS is a list of functions that should should move the
 point to a significant position, usually on the current line, but
@@ -174,13 +185,19 @@ moseys for different modes."
        (mosey ,move-funcs))
      (defun ,(intern (concat "mosey-" prefix "backward")) ()
        (interactive)
-       (mosey ,move-funcs :backward))
+       (mosey ,move-funcs :backward t))
+     (defun ,(intern (concat "mosey-" prefix "forward-bounce")) ()
+       (interactive)
+       (mosey ,move-funcs :bounce t))
+     (defun ,(intern (concat "mosey-" prefix "backward-bounce")) ()
+       (interactive)
+       (mosey ,move-funcs :backward t :bounce t))
      (defun ,(intern (concat "mosey-" prefix "forward-cycle")) ()
        (interactive)
-       (mosey ,move-funcs :cycle))
+       (mosey ,move-funcs :cycle t))
      (defun ,(intern (concat "mosey-" prefix "backward-cycle")) ()
        (interactive)
-       (mosey ,move-funcs :backward :cycle))))
+       (mosey ,move-funcs :backward t :cycle t))))
 
 ;;;; Helper functions
 

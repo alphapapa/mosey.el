@@ -12,9 +12,9 @@ Howdy.  Why don't ya mosey on in here.  Have yourself a sit-down.
 
 @@html:<img src="mosey.jpg" align="left">@@
 
-=mosey= makes it easy to mosey back and forth in your buffers.  Just pass =mosey= a list of functions that move the point to certain places, and it'll mosey the point between those places.  Tell it =:backward= if you want to mosey on back, otherwise it'll mosey on ahead.  Tell it to =:cycle= if you want it to loop around when it gets to one end or the other.
+=mosey= makes it easy to mosey back and forth in your buffers.  Just pass =mosey= a list of functions that move the point to certain places, and it'll mosey the point between those places.  Tell it =:backward t= if you want to mosey on back, otherwise it'll mosey on ahead.  Tell it to =:bounce t= if you want it to bounce back a notch when it hits the end, and tell it to =:cycle t= if you want it to loop around when it gets to one end or the other.
 
-To make it easier for ya, just pass a list of point-moving functions to =defmosey=, and it'll cook up four functions: =mosey-forward=, =mosey-backward=, =mosey-forward-cycle=, and =mosey-backward-cycle=.
+To make it easier for ya, just pass a list of point-moving functions to =defmosey=, and it'll cook up six functions: =mosey-forward=, =mosey-backward=, =mosey-forward-bounce=, =mosey-backward-bounce=, =mosey-forward-cycle=, and =mosey-backward-cycle=.  Then you can pick your fav-o-rite ones and forget about the rest!
 
 @@html:<br clear="left">@@
 
@@ -36,6 +36,8 @@ You can use these commands right off the bat to move within the current line:
 
 +  =mosey-forward=
 +  =mosey-backward=
++  =mosey-forward-bounce=
++  =mosey-backward-bounce=
 +  =mosey-forward-cycle=
 +  =mosey-backward-cycle=
 
@@ -51,9 +53,10 @@ You might even want to rebind your keys to 'em, maybe like this:
 #+BEGIN_SRC elisp
   (use-package mosey
     :bind (
-            ("C-a" . mosey-backward)
-            ("C-e" . mosey-forward)
-            ))
+           ;; My personal favorites
+           ("C-a" . mosey-backward-bounce)
+           ("C-e" . mosey-forward-bounce)
+           ))
 #+END_SRC
 
 ** Make your own moseys
@@ -70,10 +73,12 @@ It's easy to make your own =moseys= with =defmosey=, somethin' like this (this e
     :prefix "lisp")
 #+END_SRC
 
-That'll cook up four functions for ya:
+That'll cook up six functions for ya:
 
 +  =mosey-lisp-forward=
 +  =mosey-lisp-backward=
++  =mosey-lisp-forward-bounce=
++  =mosey-lisp-backward-bounce=
 +  =mosey-lisp-forward-cycle=
 +  =mosey-lisp-backward-cycle=
 
@@ -81,11 +86,15 @@ Then maybe you'd want to use 'em in your =emacs-lisp-mode=, somethin' like this:
 
 #+BEGIN_SRC elisp
   (bind-keys :map emacs-lisp-mode-map
-             ("C-a" . mosey-lisp-backward)
-             ("C-e" . mosey-lisp-forward))
+             ("C-a" . mosey-lisp-backward-bounce)
+             ("C-e" . mosey-lisp-forward-bounce))
   #+END_SRC
 
 * Changelog
+
+** 0.2-pre
+
++ Add =:bounce= option to =mosey= and associated =-bounce= functions in =defmosey=.
 
 ** 0.1
 
