@@ -48,7 +48,7 @@ You might even want to rebind your keys to 'em, maybe like this:
   (global-set-key (kbd "C-e") 'mosey-forward)
 #+END_SRC
 
-...but that'd be even easier with `use-package' and its handy-dandy =:bind= form:
+...but that'd be even easier with =use-package= and its handy-dandy =:bind= form:
 
 #+BEGIN_SRC elisp
   (use-package mosey
