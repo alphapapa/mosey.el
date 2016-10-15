@@ -123,7 +123,7 @@
 ;;;; Mosey function and macro
 
 ;;;###autoload
-(cl-defun mosey (move-funcs &key (backward nil backward-set) (cycle nil cycle-set) (bounce nil bounce-set))
+(cl-defun mosey (move-funcs &key backward bounce cycle)
   "Move the point according to the list of MOVE-FUNCS.
 
 Each function in MOVE-FUNCS should move the point to a
@@ -132,17 +132,14 @@ potentially across lines.
 
 If BACKWARD is set, move backwards.
 
-If CYCLE is set, cycle around when the beginning/end of line is
-hit.  Otherwise, stop at beginning/end of line.
-
 If BOUNCE is set, bounce back to the next-to-last position when
-the last one is hit."
-  (interactive)
-  (let* ((compare-func (if backward-set '< '>))
-         (cycle cycle-set)
-         (bounce bounce-set)
-         (current-pos (point))
+the last one is hit.
 
+If CYCLE is set, cycle around when the beginning/end of line is
+hit.  Otherwise, stop at beginning/end of line."
+  (interactive)
+  (let* ((compare-func (if backward '< '>))
+         (current-pos (point))
          ;; Make list of positions on current line, one per position-func
          (positions (sort
                      (delete-dups
