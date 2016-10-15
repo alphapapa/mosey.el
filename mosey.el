@@ -141,14 +141,11 @@ hit.  Otherwise, stop at beginning/end of line."
   (let* ((compare-func (if backward '< '>))
          (current-pos (point))
          ;; Make list of positions on current line, one per position-func
-         (positions (sort
-                     (delete-dups
-                      (mapcar (lambda (func)
-                                (save-excursion
-                                  (funcall func)
-                                  (point)))
-                              move-funcs))
-                     '<))
+         (positions (save-excursion
+                      (cl-loop for func in move-funcs
+                               do (funcall func)
+                               collect (point) into points
+                               finally return (sort (delete-dups points) '<))))
          ;; Reverse list if :backward is set (is there a more elegant way to do this?)
          (positions (if backward
                         (nreverse positions)
