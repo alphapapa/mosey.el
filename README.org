@@ -92,9 +92,10 @@ Then maybe you'd want to use 'em in your =emacs-lisp-mode=, somethin' like this:
 
 * Changelog
 
-** 0.2-pre
+** 0.2
 
-+ Add =:bounce= option to =mosey= and associated =-bounce= functions in =defmosey=.
++  Add =:bounce= option to =mosey= and associated =-bounce= functions in =defmosey=.
++  Minor optimizations.
 
 ** 0.1
 
