@@ -197,20 +197,20 @@ moseys for different modes."
 
 (defun mosey-goto-beginning-of-comment-text ()
   "Move point to beginning of comment text on current line."
-  (save-excursion
-    (end-of-line)
-    (when (re-search-backward (rx (syntax comment-start) (* space))
-                              (line-beginning-position) t)
-      (goto-char (match-end 0)))))
+  (when (save-excursion
+          (end-of-line)
+          (re-search-backward (rx (syntax comment-start) (* space))
+                              (line-beginning-position) t))
+    (goto-char (match-end 0))))
 
 (defun mosey-goto-end-of-code ()
   "Move point to end of code on current line."
-  (save-excursion
-    (beginning-of-line)
-    (when (re-search-forward (rx (or (and (1+ space) (syntax comment-start))
+  (when (save-excursion
+          (beginning-of-line)
+          (re-search-forward (rx (or (and (1+ space) (syntax comment-start))
                                      (and (* space) eol)))
-                             (line-end-position) t)
-      (goto-char (match-beginning 0)))))
+                             (line-end-position) t))
+    (goto-char (match-beginning 0))))
 
 ;;;; Default mosey
 
