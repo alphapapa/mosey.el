@@ -162,7 +162,8 @@ hit.  Otherwise, stop at beginning/end of line."
 
 ;;;###autoload
 (cl-defmacro defmosey (move-funcs &key prefix)
-  "Define `mosey-forward' and `mosey-backward' functions, with `-bounce' and `-cycle' variants.
+  "Define `mosey-forward' and `mosey-backward' functions, with
+`-bounce' and `-cycle' variants.
 
 MOVE-FUNCS is a list of functions that should should move the
 point to a significant position, usually on the current line, but
